@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import rospy
+from std_msgs.msg import String
+
+def drive_car():
+    # Khởi tạo node "self_driving_car"
+    rospy.init_node('self_driving_car', anonymous=True)
+
+    # Tạo publisher để gửi tín hiệu điều khiển đến xe
+    control_pub = rospy.Publisher('car_control', String, queue_size=10)
+
+    # Tạo subscriber để nhận dữ liệu từ các cảm biến
+    sensor_sub = rospy.Subscriber('sensor_data', String, sensor_callback)
+
+    # Vòng lặp chính
+    rate = rospy.Rate(10)  # Tần số lặp lại (10 Hz)
+    while not rospy.is_shutdown():
+        # Thực hiện xử lý và tính toán điều khiển xe
+        control_output = process_sensor_data()
+
+        # Gửi tín hiệu điều khiển đến xe
+        control_pub.publish(control_output)
+
+        rate.sleep()
+
+def sensor_callback(data):
+    # Xử lý dữ liệu từ các cảm biến
+    # ...
+
+def process_sensor_data():
+    # Tính toán và trả về tín hiệu điều khiển xe
+    # ...
+
+if __name__ == '__main__':
+    try:
+        drive_car()
+    except rospy.ROSInterruptException:
+        pass
